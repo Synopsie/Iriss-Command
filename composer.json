@@ -1,0 +1,26 @@
+{
+    "name": "synopsie/iriss-command",
+    "description": "API permettant de simplifier l'utilisation des commandes et d'avoir une autocompletion",
+    "type": "library",
+    "require": {
+        "php": "^8.1",
+        "muqsit/simple-packet-handler": "^0.1.4"
+    },
+    "require-dev": {
+        "pocketmine/pocketmine-mp": "^5.17",
+        "friendsofphp/php-cs-fixer": "^3.60"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "iriss\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dumont-Julien",
+            "email": "dumontj357@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}

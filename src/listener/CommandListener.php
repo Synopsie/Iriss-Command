@@ -23,7 +23,7 @@ use iriss\CommandBase;
 use iriss\EnumStore;
 use iriss\Main;
 use iriss\parameters\SubParameter;
-use muqsit\simplepackethandler\SimplePacketHandler;
+use iriss\libs\muqsit\simplepackethandler\SimplePacketHandler;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
 use pocketmine\network\mcpe\NetworkSession;

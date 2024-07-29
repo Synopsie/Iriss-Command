@@ -20,3 +20,5 @@ Besoin d'aide ou avez-vous des questions ? N'hésitez pas à nous contacter ou �
 ## Crédits
 
 Iriss-Command est développé par [Synopsie](https://discord.gg/JkpT7BJPXR). Merci à toute l'équipe pour son travail acharné et son dévouement à améliorer l'expérience de développement pour la communauté Discord.
+
+![Iriss-Command](iriss-command.png)

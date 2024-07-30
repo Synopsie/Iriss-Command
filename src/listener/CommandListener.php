@@ -24,23 +24,22 @@ use iriss\EnumStore;
 use iriss\libs\muqsit\simplepackethandler\SimplePacketHandler;
 use iriss\parameters\SubParameter;
 use pocketmine\command\CommandSender;
-use pocketmine\event\Listener;
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
 use pocketmine\network\mcpe\protocol\types\command\CommandOverload;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameter;
-use pocketmine\plugin\PluginBase;
+use pocketmine\plugin\Plugin;
 
 use function array_map;
 use function array_product;
 use function count;
 
-class CommandListener implements Listener {
-	private PluginBase $plugin;
+class CommandListener {
+	private Plugin $plugin;
 	private static bool $isIntercepting = false;
 
-	public function __construct(PluginBase $main) {
+	public function __construct(Plugin $main) {
         $this->plugin = $main;
 		$this->init();
 	}

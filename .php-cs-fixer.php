@@ -130,8 +130,8 @@ return (new Config())
 Cet API permet de gérer de manière facile les webhooks/message envoyés sur discord.
 
 @author SynopsieTeam
-@link https://neta.arkaniastudios.com/
-@version 2.0.1
+@link https://iriss.arkaniastudios.com/
+@version 1.1.0
 
 BODY,
             'location' => 'after_open'

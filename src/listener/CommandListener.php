@@ -21,9 +21,8 @@ namespace iriss\listener;
 
 use iriss\CommandBase;
 use iriss\EnumStore;
-use iriss\Main;
-use iriss\parameters\SubParameter;
 use iriss\libs\muqsit\simplepackethandler\SimplePacketHandler;
+use iriss\parameters\SubParameter;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
 use pocketmine\network\mcpe\NetworkSession;
@@ -31,16 +30,18 @@ use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
 use pocketmine\network\mcpe\protocol\types\command\CommandOverload;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameter;
+use pocketmine\plugin\PluginBase;
+
 use function array_map;
 use function array_product;
 use function count;
 
 class CommandListener implements Listener {
-	private Main $plugin;
+	private PluginBase $plugin;
 	private static bool $isIntercepting = false;
 
-	public function __construct(Main $main) {
-		$this->plugin = $main;
+	public function __construct(PluginBase $main) {
+        $this->plugin = $main;
 		$this->init();
 	}
 

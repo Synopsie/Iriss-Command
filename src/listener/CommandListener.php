@@ -87,7 +87,7 @@ class CommandListener {
 		if (!$subParameter) {
 			if ($command->getSubCommands() !== []) {
 				foreach ($command->getSubCommands() as $label => $subCommand) {
-					if (!$subCommand->testPermissionSilent($sender) || $subCommand->getName() !== $label) { // hide aliases
+					if (!$subCommand->testPermissionSilent($sender) || $subCommand->getName() !== $label) {
 						continue;
 					}
 					$commandParameter             = new CommandParameter();

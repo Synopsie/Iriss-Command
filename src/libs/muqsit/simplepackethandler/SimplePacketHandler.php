@@ -9,9 +9,9 @@
  *
  * Cet API permet de gérer de manière facile les webhooks/message envoyés sur discord.
  *
- * @author SynopsieTeam
+ * @author Synopsie
  * @link https://iriss.arkaniastudios.com/
- * @version 1.1.0
+ * @version 1.1.1
  *
  */
 
@@ -23,7 +23,7 @@ use InvalidArgumentException;
 use iriss\libs\muqsit\simplepackethandler\interceptor\IPacketInterceptor;
 use iriss\libs\muqsit\simplepackethandler\interceptor\PacketInterceptor;
 use iriss\libs\muqsit\simplepackethandler\monitor\IPacketMonitor;
-use muqsit\simplepackethandler\monitor\PacketMonitor;
+use iriss\libs\muqsit\simplepackethandler\monitor\PacketMonitor;
 use pocketmine\event\EventPriority;
 use pocketmine\plugin\Plugin;
 

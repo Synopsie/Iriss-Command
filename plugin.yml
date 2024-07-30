@@ -1,6 +1,0 @@
-name: Iriss-Command
-version: 1.0.0
-main: iriss\Main
-src-namespace-prefix: iriss
-api: 5.0.0
-author: Synopsie

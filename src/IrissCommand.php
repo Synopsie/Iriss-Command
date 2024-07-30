@@ -10,8 +10,8 @@
  * Cet API permet de gérer de manière facile les webhooks/message envoyés sur discord.
  *
  * @author SynopsieTeam
- * @link https://neta.arkaniastudios.com/
- * @version 2.0.1
+ * @link https://iriss.arkaniastudios.com/
+ * @version 1.1.0
  *
  */
 
@@ -20,11 +20,18 @@ declare(strict_types=1);
 namespace iriss;
 
 use iriss\listener\CommandListener;
-use pocketmine\plugin\PluginBase;
+use pocketmine\plugin\Plugin;
 
-class Main extends PluginBase {
-	protected function onEnable() : void {
-        new CommandListener($this);
+class IrissCommand {
+	private static bool $isRegister = false;
+
+	public static function register(Plugin $plugin) : bool {
+		if(self::$isRegister) {
+			return false;
+		}
+		new CommandListener($plugin);
+		self::$isRegister = true;
+		return true;
 	}
 
 }

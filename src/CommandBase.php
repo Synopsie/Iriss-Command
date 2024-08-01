@@ -11,7 +11,7 @@
  *
  * @author Synopsie
  * @link https://iriss.arkaniastudios.com/
- * @version 1.1.1
+ * @version 1.1.2
  *
  */
 
@@ -31,7 +31,6 @@ use pocketmine\player\Player;
 use function array_slice;
 use function count;
 use function implode;
-use function in_array;
 use function is_array;
 use function trim;
 use function usort;
@@ -76,12 +75,22 @@ abstract class CommandBase extends Command {
 	abstract protected function onRun(CommandSender $sender, array $parameters) : void;
 
 	private function getTotalParameters(array $args) : int {
-		$totalParameters = count($this->getCommandParameters());
+		$totalParameters = 0;
+
+		foreach ($this->getCommandParameters() as $parameter) {
+			if (!$parameter instanceof TextParameter) {
+				$totalParameters++;
+			}
+		}
 
 		foreach ($args as $arg) {
 			if (isset($this->subCommands[$arg])) {
 				$subCommand = $this->subCommands[$arg];
-				$totalParameters += count($subCommand->getCommandParameters());
+				foreach ($subCommand->getCommandParameters() as $parameter) {
+					if (!$parameter instanceof TextParameter) {
+						$totalParameters++;
+					}
+				}
 			}
 		}
 
@@ -90,7 +99,17 @@ abstract class CommandBase extends Command {
 
 	final public function execute(CommandSender $sender, string $commandLabel, array $args) : void {
 		$commandParameters = $this->getCommandParameters();
-		if (count($args) > 0 && count($args) != $this->getTotalParameters($args) + (count($this->subCommands) > 0 ? 1 : 0)) {
+		$hasTextParameter  = false;
+
+		// Check if there is a TextParameter in the command parameters
+		foreach ($commandParameters as $parameter) {
+			if ($parameter instanceof TextParameter) {
+				$hasTextParameter = true;
+				break;
+			}
+		}
+
+		if (count($args) > 0 && !($hasTextParameter && count($args) >= $this->getTotalParameters($args))) {
 			$isOptional = false;
 			foreach ($commandParameters as $parameter) {
 				if ($parameter->isOptional()) {
@@ -103,6 +122,7 @@ abstract class CommandBase extends Command {
 				return;
 			}
 		}
+
 		$passArgs      = [];
 		$senderConsole = null;
 		if (count($args) > 0) {
@@ -120,6 +140,7 @@ abstract class CommandBase extends Command {
 			$sender->sendMessage('§cUsage: ' . $this->getUsage());
 			return;
 		}
+
 		if ($passArgs !== null) {
 			try {
 				$this->onRun($senderConsole ?? $sender, $passArgs);
@@ -168,62 +189,62 @@ abstract class CommandBase extends Command {
 		return !empty($this->parameters);
 	}
 
-    private function parseArguments(array $rawArgs, CommandSender $sender) : array {
-        $return = ["arguments" => []];
-        if (!$this->hasParameters() && count($rawArgs) > 0) {
-            return $return;
-        }
-        $offset = 0;
-        if (count($rawArgs) > 0) {
-            foreach ($this->parameters as $pos => $possibleParameter) {
-                usort($possibleParameter, function (Parameters $a, Parameters $b) : int {
-                    if ($a->getSpanLength() === PHP_INT_MAX) {
-                        return 1;
-                    }
-                    return -1;
-                });
-                $parsed   = false;
-                $optional = true;
-                foreach ($possibleParameter as $argument) {
-                    if ($argument instanceof TextParameter) {
-                        $arg = trim(implode(" ", array_slice($rawArgs, $offset)));
-                    } else {
-                        $arg = trim(implode(" ", array_slice($rawArgs, $offset, ($len = $argument->getSpanLength()))));
-                    }
+	private function parseArguments(array $rawArgs, CommandSender $sender) : array {
+		$return = ["arguments" => []];
+		if (!$this->hasParameters() && count($rawArgs) > 0) {
+			return $return;
+		}
+		$offset = 0;
+		if (count($rawArgs) > 0) {
+			foreach ($this->parameters as $pos => $possibleParameter) {
+				usort($possibleParameter, function (Parameters $a, Parameters $b) : int {
+					if ($a->getSpanLength() === PHP_INT_MAX) {
+						return 1;
+					}
+					return -1;
+				});
+				$parsed   = false;
+				$optional = true;
+				foreach ($possibleParameter as $argument) {
+					if ($argument instanceof TextParameter) {
+						$arg = trim(implode(" ", array_slice($rawArgs, $offset)));
+					} else {
+						$arg = trim(implode(" ", array_slice($rawArgs, $offset, ($len = $argument->getSpanLength()))));
+					}
 
-                    if (!$argument->isOptional()) {
-                        $optional = false;
-                    }
-                    if ($arg !== "" && $argument->canParse($arg, $sender)) {
-                        $k      = $argument->getName();
-                        $result = (clone $argument)->parse($arg, $sender);
-                        if (isset($return["arguments"][$k]) && !is_array($return["arguments"][$k])) {
-                            $old = $return["arguments"][$k];
-                            unset($return["arguments"][$k]);
-                            $return["arguments"][$k]   = [$old];
-                            $return["arguments"][$k][] = $result;
-                        } else {
-                            $return["arguments"][$k] = $result;
-                        }
-                        if (!($argument instanceof TextParameter)) {
-                            $offset += $len;
-                        } else {
-                            $offset = count($rawArgs);
-                        }
-                        $parsed = true;
-                        break;
-                    }
-                    if ($offset > count($rawArgs)) {
-                        break;
-                    }
-                }
-                if (!$parsed && !($optional && empty($arg))) {
-                    return $return;
-                }
-            }
-        }
-        return $return;
-    }
+					if (!$argument->isOptional()) {
+						$optional = false;
+					}
+					if ($arg !== "" && $argument->canParse($arg, $sender)) {
+						$k      = $argument->getName();
+						$result = (clone $argument)->parse($arg, $sender);
+						if (isset($return["arguments"][$k]) && !is_array($return["arguments"][$k])) {
+							$old = $return["arguments"][$k];
+							unset($return["arguments"][$k]);
+							$return["arguments"][$k]   = [$old];
+							$return["arguments"][$k][] = $result;
+						} else {
+							$return["arguments"][$k] = $result;
+						}
+						if (!($argument instanceof TextParameter)) {
+							$offset += $len;
+						} else {
+							$offset = count($rawArgs);
+						}
+						$parsed = true;
+						break;
+					}
+					if ($offset > count($rawArgs)) {
+						break;
+					}
+				}
+				if (!$parsed && !($optional && empty($arg))) {
+					return $return;
+				}
+			}
+		}
+		return $return;
+	}
 
 	protected function fetchPermittedPlayerTarget(CommandSender $sender, ?Player $target, string $selfPermission, string $otherPermission) : ?Player {
 		if($target !== null) {

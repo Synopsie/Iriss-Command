@@ -2,16 +2,43 @@
 
 Faciliter l'utilisation et la création de commande lié à pocketmine.
 
-## Nouveautés de cette Version
+---
+## Fonctionnalités
 
 - Création de commande ainsi que de sous-command
 - Auto-completion des commandes.
 - Utilisation de parametre pour les commandes.
 - Possibilité de créer ses propres parametres.
 
-## Pour Commencer
+## Installation
+Pour installer [Nacre-UI](https://github.com/Synopsie/Nacre-UI) dans votre projet, si vous utilisez [composer](https://getcomposer.org/):
+`````php
+composer require synopsie/nacre-ui
+`````
 
-Intégrez dès maintenant la dernière version de Iriss-Command à vos projets et profitez d'une gestion simplifiée des commandes sur minecraft.
+Si vous n'utilisez pas [composer](https://getcomposer.org/), alors je vous invite à mettre l'API entièrement dans votre projet, et a changer les namespaces.
+
+## Utilisation
+**Command**
+```php
+class CommandTest extends CommandBase {
+
+    public function __construct($name, $description, $usage, $subCommand, $aliases) {}
+
+    public function getCommandParameter() : array {} #Permet de définir les paramètres utilisés pas la commande.
+    
+    public function onRun(CommandSender $sender, array $params) : void {} #Permet de définir l'action de la commande.
+}
+```
+
+**Parameter**
+```php
+class ParameterTest extends Parameter{
+    
+    //code
+
+}
+```
 
 ## Support
 

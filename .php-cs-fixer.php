@@ -131,7 +131,7 @@ Cet API permet de gérer de manière facile les webhooks/message envoyés sur di
 
 @author Synopsie
 @link https://iriss.arkaniastudios.com/
-@version 2.0.0
+@version 2.0.1
 
 BODY,
             'location' => 'after_open'

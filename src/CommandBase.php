@@ -11,7 +11,7 @@
  *
  * @author Synopsie
  * @link https://iriss.arkaniastudios.com/
- * @version 2.0.0
+ * @version 2.0.1
  *
  */
 

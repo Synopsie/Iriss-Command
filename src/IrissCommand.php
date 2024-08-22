@@ -33,5 +33,4 @@ class IrissCommand {
 		self::$isRegister = true;
 		return true;
 	}
-
 }

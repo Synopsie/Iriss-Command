@@ -11,10 +11,10 @@ Faciliter l'utilisation et la création de commande lié à pocketmine.
 - Possibilité de créer ses propres parametres.
 
 ## Installation
-Pour installer [Nacre-UI](https://github.com/Synopsie/Nacre-UI) dans votre projet, si vous utilisez [composer](https://getcomposer.org/):
-`````php
+Pour installer [Iriss-Command](https://github.com/Synopsie/Nacre-UI) dans votre projet, si vous utilisez [composer](https://getcomposer.org/):
+```php
 composer require synopsie/nacre-ui
-`````
+```
 
 Si vous n'utilisez pas [composer](https://getcomposer.org/), alors je vous invite à mettre l'API entièrement dans votre projet, et a changer les namespaces.
 

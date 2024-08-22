@@ -127,11 +127,11 @@ return (new Config())
  ___) |   | |   | |\  | | |_| | |  __/   ___) |  | |  | |___  
 |____/    |_|   |_| \_|  \___/  |_|     |____/  |___| |_____|
 
-Cet API permet de gérer de manière facile les webhooks/message envoyés sur discord.
+API permettant de simplifier l'utilisation des commandes et d'avoir une autocompletion
 
 @author Synopsie
-@link https://iriss.arkaniastudios.com/
-@version 2.0.1
+@link https://gtihub.com/Synopsie
+@version 2.1.0
 
 BODY,
             'location' => 'after_open'

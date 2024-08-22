@@ -21,11 +21,5 @@
             "email": "dumontj357@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
-    "extra": {
-        "virion": {
-            "spec": "3.0",
-            "namespace-root": "iriss"
-        }
-    }
+    "minimum-stability": "stable"
 }
